@@ -30,7 +30,7 @@ var (
 		{Name: "html", Type: field.TypeString, Size: 2147483647},
 		{Name: "created", Type: field.TypeTime},
 		{Name: "updated", Type: field.TypeTime},
-		{Name: "url", Type: field.TypeString, Unique: true},
+		{Name: "url", Type: field.TypeString, Unique: true, Size: 2048},
 	}
 	// PagesTable holds the schema information for the "pages" table.
 	PagesTable = &schema.Table{

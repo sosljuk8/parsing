@@ -56,5 +56,19 @@ func init() {
 	// pageDescURL is the schema descriptor for url field.
 	pageDescURL := pageFields[5].Descriptor()
 	// page.URLValidator is a validator for the "url" field. It is called by the builders before save.
-	page.URLValidator = pageDescURL.Validators[0].(func(string) error)
+	page.URLValidator = func() func(string) error {
+		validators := pageDescURL.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(url string) error {
+			for _, fn := range fns {
+				if err := fn(url); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 }
