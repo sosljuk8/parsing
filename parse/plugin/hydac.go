@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gocolly/colly/v2"
 	"log"
+	"parsing/dto"
 	"regexp"
 )
 
@@ -28,12 +29,12 @@ func NewHydacJob() Job {
 
 		return errors.New("url not following mask /shop/en/{number}")
 	}
-	job.OnPage = func(e *colly.Response) (Page, error) {
+	job.OnPage = func(e *colly.Response) (dto.Page, error) {
 
 		// TODO: Save body to db
 
 		fmt.Println("OnPage")
-		return Page{}, nil
+		return dto.Page{}, nil
 	}
 
 	return job
