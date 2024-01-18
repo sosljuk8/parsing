@@ -78,6 +78,14 @@ func (pc *PageCreate) SetProcessed(t time.Time) *PageCreate {
 	return pc
 }
 
+// SetNillableProcessed sets the "processed" field if the given value is not nil.
+func (pc *PageCreate) SetNillableProcessed(t *time.Time) *PageCreate {
+	if t != nil {
+		pc.SetProcessed(*t)
+	}
+	return pc
+}
+
 // SetURL sets the "url" field.
 func (pc *PageCreate) SetURL(s string) *PageCreate {
 	pc.mutation.SetURL(s)
@@ -126,6 +134,10 @@ func (pc *PageCreate) defaults() {
 	if _, ok := pc.mutation.Updated(); !ok {
 		v := page.DefaultUpdated()
 		pc.mutation.SetUpdated(v)
+	}
+	if _, ok := pc.mutation.Processed(); !ok {
+		v := page.DefaultProcessed
+		pc.mutation.SetProcessed(v)
 	}
 }
 

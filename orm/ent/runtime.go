@@ -71,6 +71,10 @@ func init() {
 	pageDescUpdated := pageFields[5].Descriptor()
 	// page.DefaultUpdated holds the default value on creation for the updated field.
 	page.DefaultUpdated = pageDescUpdated.Default.(func() time.Time)
+	// pageDescProcessed is the schema descriptor for processed field.
+	pageDescProcessed := pageFields[6].Descriptor()
+	// page.DefaultProcessed holds the default value on creation for the processed field.
+	page.DefaultProcessed = pageDescProcessed.Default.(time.Time)
 	// pageDescURL is the schema descriptor for url field.
 	pageDescURL := pageFields[7].Descriptor()
 	// page.URLValidator is a validator for the "url" field. It is called by the builders before save.
