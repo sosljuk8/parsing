@@ -12,25 +12,22 @@ type PageStore interface {
 }
 
 type Crawler struct {
-	PageStore PageStore
+	store PageStore
+	jobs  plugin.Jobs
 }
 
-func NewCrawler(s PageStore) Crawler {
+func NewCrawler(s PageStore, j plugin.Jobs) Crawler {
 	return Crawler{
-		PageStore: s,
+		store: s,
+		jobs:  j,
 	}
-
 }
 
 func (p Crawler) Run() {
 
-	jobs := []plugin.Job{
-		plugin.NewHydacJob(),
-	}
-	for _, j := range jobs {
+	for _, j := range p.jobs.All() {
 		p.Process(j)
 	}
-
 }
 
 func (p Crawler) Process(j plugin.Job) {
@@ -65,7 +62,7 @@ func (p Crawler) Process(j plugin.Job) {
 			return
 		}
 
-		err = p.PageStore.Save(page)
+		err = p.store.Save(page)
 		if err != nil {
 			fmt.Println("Page Save failed", err.Error())
 			return
