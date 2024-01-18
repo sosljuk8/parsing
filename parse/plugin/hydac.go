@@ -52,6 +52,11 @@ func NewHydacJob() Job {
 		}, nil
 	}
 
+	job.OnProduct = func(p dto.Page) (dto.Product, error) {
+
+		fmt.Println("OnProduct")
+		return ParsePageHydac(p), nil
+	}
 	return job
 }
 
