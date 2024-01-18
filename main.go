@@ -4,6 +4,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"parsing/orm"
 	"parsing/parse"
+	"parsing/parse/plugin"
 )
 
 func main() {
@@ -13,7 +14,9 @@ func main() {
 	defer c.Close()
 
 	s := orm.NewStore(c)
-	p := parse.NewCrawler(s)
+	jobs := plugin.NewJobs()
+	jobs.Add(plugin.NewHydacJob())
+	p := parse.NewCrawler(s, jobs)
 
 	p.Run()
 }
