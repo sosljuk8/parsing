@@ -8,7 +8,7 @@ import (
 )
 
 type MapperStore interface {
-	LoadUnprocessed(jobName string, limit int) []dto.Page
+	UnprocessedPages(jobName string, limit int) dto.Pages
 	SaveProducts(...dto.Product) error
 }
 
@@ -41,12 +41,12 @@ func (p Mapper) Processor(j plugin.Job) {
 func (p Mapper) Process(j plugin.Job) error {
 
 	// load first 100 unprocessed pages
-	pages := p.store.LoadUnprocessed(j.Name, 100)
+	pages := p.store.UnprocessedPages(j.Name, 100)
 
 	// for each page
-	for _, page := range pages {
+	for _, page := range pages.All() {
 		// parse page
-		product, err := j.OnProduct(page)
+		product, err := j.OnProduct(*page)
 		if err != nil {
 			return err
 		}
