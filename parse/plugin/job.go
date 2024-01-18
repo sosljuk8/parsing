@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"errors"
 	"github.com/gocolly/colly/v2"
 	"parsing/dto"
 )
@@ -12,6 +13,7 @@ type Job struct {
 	StartingURL    string
 	OnLink         func(e *colly.HTMLElement) error
 	OnPage         func(e *colly.Response) (dto.Page, error)
+	OnProduct      func(p dto.Page) (dto.Product, error)
 }
 
 func NewDefaultJob() Job {
@@ -26,6 +28,9 @@ func NewDefaultJob() Job {
 				URL:  e.Request.URL.String(),
 				HTML: string(e.Body),
 			}, nil
+		},
+		OnProduct: func(p dto.Page) (dto.Product, error) {
+			return dto.Product{}, errors.New("OnProduct not implemented")
 		},
 	}
 }
