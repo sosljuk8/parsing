@@ -1,6 +1,8 @@
 package dto
 
 type Page struct {
-	Url  string
-	HTML string
+	URL    string
+	HTML   string
+	Brand  string
+	Domain string
 }

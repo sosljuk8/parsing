@@ -23,6 +23,7 @@ func (Page) Fields() []ent.Field {
 			Default(time.Now),
 		field.Time("updated").
 			Default(time.Now),
+		field.Time("processed"),
 		field.String("url").Unique().NotEmpty().MaxLen(ChromeUrlMaxLen),
 	}
 }
