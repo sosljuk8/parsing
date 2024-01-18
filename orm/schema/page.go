@@ -23,11 +23,9 @@ func (Page) Fields() []ent.Field {
 		field.String("domain").NotEmpty(),
 		field.String("job").MaxLen(JobNameMaxLen).NotEmpty(),
 		field.Text("html").NotEmpty().StructTag(`validate:"required"`),
-		field.Time("created").
-			Default(time.Now),
-		field.Time("updated").
-			Default(time.Now),
-		field.Time("processed"),
+		field.Time("created").Default(time.Now),
+		field.Time("updated").Default(time.Now),
+		field.Time("processed").Default(time.Time{}),
 		field.String("url").Unique().NotEmpty().MaxLen(ChromeUrlMaxLen),
 	}
 }
