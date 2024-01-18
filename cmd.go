@@ -4,6 +4,8 @@ import (
 	"github.com/spf13/cobra"
 	"log/slog"
 	"parsing/orm"
+	"parsing/parse"
+	"parsing/parse/plugin"
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -23,5 +25,29 @@ var migrateCmd = &cobra.Command{
 		if err != nil {
 			slog.Error("Migrate", err)
 		}
+	},
+}
+
+var crawlerCmd = &cobra.Command{
+	Use:   "crawler",
+	Short: "Run crawler jobs",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		// create database ORM client
+		c := orm.NewClient()
+		defer c.Close()
+
+		// create high-level database store
+		s := orm.NewStore(c)
+
+		// initialize jobs for crawler
+		jobs := plugin.NewJobs()
+		jobs.Add(plugin.NewHydacJob())
+
+		// create crawler instance
+		p := parse.NewCrawler(s, jobs)
+
+		// run crawler until stopped
+		p.Run()
 	},
 }
