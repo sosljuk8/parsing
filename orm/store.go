@@ -4,6 +4,8 @@ import (
 	"context"
 	"parsing/dto"
 	"parsing/orm/ent"
+	"parsing/orm/ent/page"
+	"time"
 )
 
 type Store struct {
@@ -62,4 +64,45 @@ func (s *Store) IsVisited(url string) bool {
 		s.loadVisited()
 	}
 	return s.visited[url]
+}
+
+func (s *Store) UnprocessedPages(jobName string, limit int) ([]*dto.Page, error) {
+
+	entities, err := s.ent.Page.Query().
+		Where(page.Job(jobName), page.Processed(time.Time{})).
+		Order(ent.Desc(page.FieldCreated)).
+		Limit(limit).
+		All(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return PagesDTO(entities), nil
+}
+
+func (s *Store) SaveProducts(products ...*dto.Product) error {
+
+	// ent.ProductCreate used for bulk insert
+	// https://entgo.io/docs/crud/#create-many
+	entities := make([]*ent.ProductCreate, len(products))
+
+	for _, product := range products {
+
+		// create empty entity
+		entity := s.ent.Product.Create()
+
+		// set fields from dto.Product to the entity
+		ProductCreateEntity(product, entity)
+
+		// append entity to the slice
+		entities = append(entities, entity)
+	}
+
+	// use slice for bulk insert
+	_, err := s.ent.Product.
+		CreateBulk(entities...).
+		Save(context.TODO())
+
+	return err
 }
