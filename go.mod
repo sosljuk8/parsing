@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	entgo.io/ent v0.12.5
+	github.com/brianvoe/gofakeit/v6 v6.27.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/spf13/cobra v1.7.0
