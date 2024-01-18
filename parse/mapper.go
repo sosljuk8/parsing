@@ -12,22 +12,22 @@ type MapperStore interface {
 	SaveProducts(...dto.Product) error
 }
 
-type ProductMapper struct {
+type Mapper struct {
 	store MapperStore
 	jobs  plugin.Jobs
 }
 
-func NewProductMapper(store MapperStore, j plugin.Jobs) ProductMapper {
-	return ProductMapper{store: store, jobs: j}
+func NewMapper(store MapperStore, j plugin.Jobs) Mapper {
+	return Mapper{store: store, jobs: j}
 }
 
-func (p ProductMapper) Run() {
+func (p Mapper) Run() {
 	for _, j := range p.jobs.All() {
 		go p.Processor(j)
 	}
 }
 
-func (p ProductMapper) Processor(j plugin.Job) {
+func (p Mapper) Processor(j plugin.Job) {
 
 	for {
 		err := p.Process(j)
@@ -38,7 +38,7 @@ func (p ProductMapper) Processor(j plugin.Job) {
 	}
 }
 
-func (p ProductMapper) Process(j plugin.Job) error {
+func (p Mapper) Process(j plugin.Job) error {
 
 	// load first 100 unprocessed pages
 	pages := p.store.LoadUnprocessed(j.Name, 100)
@@ -67,6 +67,6 @@ func (p ProductMapper) Process(j plugin.Job) error {
 	return nil
 }
 
-func (p ProductMapper) save(product dto.Product) error {
+func (p Mapper) save(product dto.Product) error {
 	return p.store.SaveProducts(product)
 }
