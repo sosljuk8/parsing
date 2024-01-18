@@ -2,6 +2,7 @@ package parse
 
 import (
 	"parsing/dto"
+	"parsing/parse/plugin"
 )
 
 type MapperStore interface {
@@ -23,20 +24,16 @@ func (p ProductMapper) Run(jobName string, limit int) error {
 
 	// for each page
 	for _, page := range pages {
-		product := p.parse(page)
+		product := p.Parse(page)
 		p.save(product)
 	}
 
 	return nil
 }
 
-func (p ProductMapper) parse(page dto.Page) dto.Product {
-	return dto.Product{
-		Series:     "test",
-		Model:      "test",
-		Sku:        "test",
-		Properties: map[string]string{"test": "test"},
-	}
+func (p ProductMapper) Parse(page dto.Page) dto.Product {
+	product := plugin.ParsePageHydac(page)
+	return product
 }
 
 func (p ProductMapper) save(product dto.Product) error {

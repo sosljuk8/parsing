@@ -54,3 +54,12 @@ func NewHydacJob() Job {
 
 	return job
 }
+
+func ParsePageHydac(page dto.Page) dto.Product {
+	return dto.Product{
+		Series:     "test",
+		Model:      "test",
+		Sku:        "test",
+		Properties: map[string]string{"test": "test"},
+	}
+}
