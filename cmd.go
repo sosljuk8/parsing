@@ -51,3 +51,27 @@ var crawlerCmd = &cobra.Command{
 		p.Run()
 	},
 }
+
+var mapperCmd = &cobra.Command{
+	Use:   "mapper",
+	Short: "Run mapper jobs",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		// create database ORM client
+		c := orm.NewClient()
+		defer c.Close()
+
+		// create high-level database store
+		s := orm.NewStore(c)
+
+		// initialize jobs for crawler
+		jobs := plugin.NewJobs()
+		jobs.Add(plugin.NewHydacJob())
+
+		// create crawler instance
+		p := parse.NewMapper(s, jobs)
+
+		// run crawler until stopped
+		p.Run()
+	},
+}
