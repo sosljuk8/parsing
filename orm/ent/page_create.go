@@ -32,6 +32,12 @@ func (pc *PageCreate) SetDomain(s string) *PageCreate {
 	return pc
 }
 
+// SetJob sets the "job" field.
+func (pc *PageCreate) SetJob(s string) *PageCreate {
+	pc.mutation.SetJob(s)
+	return pc
+}
+
 // SetHTML sets the "html" field.
 func (pc *PageCreate) SetHTML(s string) *PageCreate {
 	pc.mutation.SetHTML(s)
@@ -63,6 +69,12 @@ func (pc *PageCreate) SetNillableUpdated(t *time.Time) *PageCreate {
 	if t != nil {
 		pc.SetUpdated(*t)
 	}
+	return pc
+}
+
+// SetProcessed sets the "processed" field.
+func (pc *PageCreate) SetProcessed(t time.Time) *PageCreate {
+	pc.mutation.SetProcessed(t)
 	return pc
 }
 
@@ -135,6 +147,14 @@ func (pc *PageCreate) check() error {
 			return &ValidationError{Name: "domain", err: fmt.Errorf(`ent: validator failed for field "Page.domain": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.Job(); !ok {
+		return &ValidationError{Name: "job", err: errors.New(`ent: missing required field "Page.job"`)}
+	}
+	if v, ok := pc.mutation.Job(); ok {
+		if err := page.JobValidator(v); err != nil {
+			return &ValidationError{Name: "job", err: fmt.Errorf(`ent: validator failed for field "Page.job": %w`, err)}
+		}
+	}
 	if _, ok := pc.mutation.HTML(); !ok {
 		return &ValidationError{Name: "html", err: errors.New(`ent: missing required field "Page.html"`)}
 	}
@@ -148,6 +168,9 @@ func (pc *PageCreate) check() error {
 	}
 	if _, ok := pc.mutation.Updated(); !ok {
 		return &ValidationError{Name: "updated", err: errors.New(`ent: missing required field "Page.updated"`)}
+	}
+	if _, ok := pc.mutation.Processed(); !ok {
+		return &ValidationError{Name: "processed", err: errors.New(`ent: missing required field "Page.processed"`)}
 	}
 	if _, ok := pc.mutation.URL(); !ok {
 		return &ValidationError{Name: "url", err: errors.New(`ent: missing required field "Page.url"`)}
@@ -191,6 +214,10 @@ func (pc *PageCreate) createSpec() (*Page, *sqlgraph.CreateSpec) {
 		_spec.SetField(page.FieldDomain, field.TypeString, value)
 		_node.Domain = value
 	}
+	if value, ok := pc.mutation.Job(); ok {
+		_spec.SetField(page.FieldJob, field.TypeString, value)
+		_node.Job = value
+	}
 	if value, ok := pc.mutation.HTML(); ok {
 		_spec.SetField(page.FieldHTML, field.TypeString, value)
 		_node.HTML = value
@@ -202,6 +229,10 @@ func (pc *PageCreate) createSpec() (*Page, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.Updated(); ok {
 		_spec.SetField(page.FieldUpdated, field.TypeTime, value)
 		_node.Updated = value
+	}
+	if value, ok := pc.mutation.Processed(); ok {
+		_spec.SetField(page.FieldProcessed, field.TypeTime, value)
+		_node.Processed = value
 	}
 	if value, ok := pc.mutation.URL(); ok {
 		_spec.SetField(page.FieldURL, field.TypeString, value)

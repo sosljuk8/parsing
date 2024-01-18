@@ -41,20 +41,38 @@ func init() {
 	pageDescDomain := pageFields[1].Descriptor()
 	// page.DomainValidator is a validator for the "domain" field. It is called by the builders before save.
 	page.DomainValidator = pageDescDomain.Validators[0].(func(string) error)
+	// pageDescJob is the schema descriptor for job field.
+	pageDescJob := pageFields[2].Descriptor()
+	// page.JobValidator is a validator for the "job" field. It is called by the builders before save.
+	page.JobValidator = func() func(string) error {
+		validators := pageDescJob.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(job string) error {
+			for _, fn := range fns {
+				if err := fn(job); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// pageDescHTML is the schema descriptor for html field.
-	pageDescHTML := pageFields[2].Descriptor()
+	pageDescHTML := pageFields[3].Descriptor()
 	// page.HTMLValidator is a validator for the "html" field. It is called by the builders before save.
 	page.HTMLValidator = pageDescHTML.Validators[0].(func(string) error)
 	// pageDescCreated is the schema descriptor for created field.
-	pageDescCreated := pageFields[3].Descriptor()
+	pageDescCreated := pageFields[4].Descriptor()
 	// page.DefaultCreated holds the default value on creation for the created field.
 	page.DefaultCreated = pageDescCreated.Default.(func() time.Time)
 	// pageDescUpdated is the schema descriptor for updated field.
-	pageDescUpdated := pageFields[4].Descriptor()
+	pageDescUpdated := pageFields[5].Descriptor()
 	// page.DefaultUpdated holds the default value on creation for the updated field.
 	page.DefaultUpdated = pageDescUpdated.Default.(func() time.Time)
 	// pageDescURL is the schema descriptor for url field.
-	pageDescURL := pageFields[5].Descriptor()
+	pageDescURL := pageFields[7].Descriptor()
 	// page.URLValidator is a validator for the "url" field. It is called by the builders before save.
 	page.URLValidator = func() func(string) error {
 		validators := pageDescURL.Validators
