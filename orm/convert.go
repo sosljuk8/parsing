@@ -94,3 +94,10 @@ func ProductsEntity(p []*dto.Product) []*ent.Product {
 
 	return products
 }
+
+func ProductCreateEntity(p *dto.Product, c *ent.ProductCreate) {
+	c.SetSeries(p.Series)
+	c.SetModel(p.Model)
+	c.SetSku(p.Sku)
+	c.SetProperties(p.Properties)
+}
