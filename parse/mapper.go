@@ -8,8 +8,8 @@ import (
 )
 
 type MapperStore interface {
-	UnprocessedPages(jobName string, limit int) dto.Pages
-	SaveProducts(...dto.Product) error
+	UnprocessedPages(jobName string, limit int) []*dto.Page
+	SaveProducts(...*dto.Product) error
 }
 
 type Mapper struct {
@@ -44,7 +44,7 @@ func (p Mapper) Process(j plugin.Job) error {
 	pages := p.store.UnprocessedPages(j.Name, 100)
 
 	// for each page
-	for _, page := range pages.All() {
+	for _, page := range pages {
 		// parse page
 		product, err := j.OnProduct(*page)
 		if err != nil {
@@ -52,7 +52,7 @@ func (p Mapper) Process(j plugin.Job) error {
 		}
 
 		// save product
-		err = p.save(product)
+		err = p.save(&product)
 		if err != nil {
 			return err
 		}
@@ -67,6 +67,6 @@ func (p Mapper) Process(j plugin.Job) error {
 	return nil
 }
 
-func (p Mapper) save(product dto.Product) error {
+func (p Mapper) save(product *dto.Product) error {
 	return p.store.SaveProducts(product)
 }
