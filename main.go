@@ -1,22 +1,14 @@
 package main
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"parsing/orm"
-	"parsing/parse"
-	"parsing/parse/plugin"
+	"os"
 )
 
 func main() {
-	//orm.Migrate()
-
-	c := orm.NewClient()
-	defer c.Close()
-
-	s := orm.NewStore(c)
-	jobs := plugin.NewJobs()
-	jobs.Add(plugin.NewHydacJob())
-	p := parse.NewCrawler(s, jobs)
-
-	p.Run()
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
