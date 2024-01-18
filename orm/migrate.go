@@ -2,21 +2,19 @@ package orm
 
 import (
 	"context"
-	"log"
-	"parsing/orm/ent"
+	"log/slog"
 )
 
 // Migrate runs the migration tool
-func Migrate() {
+func Migrate() error {
+
 	client := NewClient()
-	// Run the auto migration tool.
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
-	defer func(client *ent.Client) {
-		err := client.Close()
-		if err != nil {
-			log.Printf("failed closing connection to mysql: %v\n", err)
+
+	defer func() {
+		if err := client.Close(); err != nil {
+			slog.Error("Fail to close database connection after migration", err)
 		}
-	}(client)
+	}()
+
+	return client.Schema.Create(context.Background())
 }
