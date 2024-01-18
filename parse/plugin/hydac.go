@@ -7,7 +7,11 @@ import (
 	"log"
 	"parsing/dto"
 	"regexp"
+	"strings"
 )
+
+const BrandHydac = "HYDAC"
+const BrandDomain = "www.hydac.com"
 
 func NewHydacJob() Job {
 
@@ -18,23 +22,34 @@ func NewHydacJob() Job {
 	}
 
 	job := NewDefaultJob()
-	job.AllowedDomains = []string{"www.hydac.com"}
-	job.StartingURL = "https://www.hydac.com/shop/en"
+	job.AllowedDomains = []string{BrandDomain}
+	job.StartingURL = "https://www.hydac.com/shop/en/hps-2400-1000496612"
 	job.OnLink = func(e *colly.HTMLElement) error {
 
 		url := e.Attr("href")
-		if exp.MatchString(url) {
+		if strings.Contains(url, "shop/en") {
 			return nil
 		}
 
-		return errors.New("url not following mask /shop/en/{number}")
+		return errors.New("url not following mask /shop/en")
 	}
+
 	job.OnPage = func(e *colly.Response) (dto.Page, error) {
 
 		// TODO: Save body to db
 
+		url := e.Request.URL.String()
+		if !exp.MatchString(url) {
+			return dto.Page{}, errors.New("url not following mask /shop/en/{number}")
+		}
+
 		fmt.Println("OnPage")
-		return dto.Page{}, nil
+		return dto.Page{
+			URL:    url,
+			HTML:   string(e.Body),
+			Brand:  BrandHydac,
+			Domain: BrandDomain,
+		}, nil
 	}
 
 	return job
