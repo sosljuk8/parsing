@@ -72,12 +72,6 @@ func (p Processor) Process(j plugin.Job) {
 		}
 	})
 
-	// Before making a request print "Visiting ..."
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL.String())
-
-	})
-
 	err := c.Visit(j.StartingURL)
 	if err != nil {
 		fmt.Println("Visiting failed!!!!! to ", err.Error())
