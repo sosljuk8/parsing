@@ -11,18 +11,18 @@ type PageStore interface {
 	Save(page dto.Page) error
 }
 
-type Processor struct {
+type Crawler struct {
 	PageStore PageStore
 }
 
-func NewProcessor(s PageStore) Processor {
-	return Processor{
+func NewCrawler(s PageStore) Crawler {
+	return Crawler{
 		PageStore: s,
 	}
 
 }
 
-func (p Processor) Run() {
+func (p Crawler) Run() {
 
 	jobs := []plugin.Job{
 		plugin.NewHydacJob(),
@@ -33,7 +33,7 @@ func (p Processor) Run() {
 
 }
 
-func (p Processor) Process(j plugin.Job) {
+func (p Crawler) Process(j plugin.Job) {
 
 	// Instantiate default collector
 	c := colly.NewCollector(

@@ -13,7 +13,7 @@ func main() {
 	defer c.Close()
 
 	s := orm.NewStore(c)
-	p := parse.NewProcessor(s)
+	p := parse.NewCrawler(s)
 
 	p.Run()
 }
