@@ -21,7 +21,7 @@ func NewDefaultJob() Job {
 		},
 		OnPage: func(e *colly.Response) (dto.Page, error) {
 			return dto.Page{
-				Url:  e.Request.URL.String(),
+				URL:  e.Request.URL.String(),
 				HTML: string(e.Body),
 			}, nil
 		},
