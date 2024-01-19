@@ -26,6 +26,7 @@ func (s *Store) Save(page dto.Page) error {
 
 	_, err := s.ent.Page.
 		Create().
+		SetJob(page.Job).
 		SetURL(page.URL).
 		SetHTML(page.HTML).
 		SetBrand(page.Brand).
@@ -34,10 +35,16 @@ func (s *Store) Save(page dto.Page) error {
 
 	// set visited
 	if err != nil {
-		s.visited[page.URL] = true
+		s.SetVisited(page.URL)
 	}
 
 	return err
+}
+
+func (s *Store) SetVisited(url string) {
+	if !s.IsVisited(url) {
+		s.visited[url] = true
+	}
 }
 
 // loadVisited loads all visited pages from db

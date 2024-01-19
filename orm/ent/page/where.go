@@ -474,6 +474,16 @@ func ProcessedLTE(v time.Time) predicate.Page {
 	return predicate.Page(sql.FieldLTE(FieldProcessed, v))
 }
 
+// ProcessedIsNil applies the IsNil predicate on the "processed" field.
+func ProcessedIsNil() predicate.Page {
+	return predicate.Page(sql.FieldIsNull(FieldProcessed))
+}
+
+// ProcessedNotNil applies the NotNil predicate on the "processed" field.
+func ProcessedNotNil() predicate.Page {
+	return predicate.Page(sql.FieldNotNull(FieldProcessed))
+}
+
 // URLEQ applies the EQ predicate on the "url" field.
 func URLEQ(v string) predicate.Page {
 	return predicate.Page(sql.FieldEQ(FieldURL, v))

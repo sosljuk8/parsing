@@ -126,6 +126,12 @@ func (pu *PageUpdate) SetNillableProcessed(t *time.Time) *PageUpdate {
 	return pu
 }
 
+// ClearProcessed clears the value of the "processed" field.
+func (pu *PageUpdate) ClearProcessed() *PageUpdate {
+	pu.mutation.ClearProcessed()
+	return pu
+}
+
 // SetURL sets the "url" field.
 func (pu *PageUpdate) SetURL(s string) *PageUpdate {
 	pu.mutation.SetURL(s)
@@ -234,6 +240,9 @@ func (pu *PageUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.Processed(); ok {
 		_spec.SetField(page.FieldProcessed, field.TypeTime, value)
+	}
+	if pu.mutation.ProcessedCleared() {
+		_spec.ClearField(page.FieldProcessed, field.TypeTime)
 	}
 	if value, ok := pu.mutation.URL(); ok {
 		_spec.SetField(page.FieldURL, field.TypeString, value)
@@ -353,6 +362,12 @@ func (puo *PageUpdateOne) SetNillableProcessed(t *time.Time) *PageUpdateOne {
 	if t != nil {
 		puo.SetProcessed(*t)
 	}
+	return puo
+}
+
+// ClearProcessed clears the value of the "processed" field.
+func (puo *PageUpdateOne) ClearProcessed() *PageUpdateOne {
+	puo.mutation.ClearProcessed()
 	return puo
 }
 
@@ -494,6 +509,9 @@ func (puo *PageUpdateOne) sqlSave(ctx context.Context) (_node *Page, err error) 
 	}
 	if value, ok := puo.mutation.Processed(); ok {
 		_spec.SetField(page.FieldProcessed, field.TypeTime, value)
+	}
+	if puo.mutation.ProcessedCleared() {
+		_spec.ClearField(page.FieldProcessed, field.TypeTime)
 	}
 	if value, ok := puo.mutation.URL(); ok {
 		_spec.SetField(page.FieldURL, field.TypeString, value)

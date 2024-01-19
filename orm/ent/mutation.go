@@ -1129,7 +1129,7 @@ func (m *PageMutation) Processed() (r time.Time, exists bool) {
 // OldProcessed returns the old "processed" field's value of the Page entity.
 // If the Page object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PageMutation) OldProcessed(ctx context.Context) (v time.Time, err error) {
+func (m *PageMutation) OldProcessed(ctx context.Context) (v *time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldProcessed is only allowed on UpdateOne operations")
 	}
@@ -1143,9 +1143,22 @@ func (m *PageMutation) OldProcessed(ctx context.Context) (v time.Time, err error
 	return oldValue.Processed, nil
 }
 
+// ClearProcessed clears the value of the "processed" field.
+func (m *PageMutation) ClearProcessed() {
+	m.processed = nil
+	m.clearedFields[page.FieldProcessed] = struct{}{}
+}
+
+// ProcessedCleared returns if the "processed" field was cleared in this mutation.
+func (m *PageMutation) ProcessedCleared() bool {
+	_, ok := m.clearedFields[page.FieldProcessed]
+	return ok
+}
+
 // ResetProcessed resets all changes to the "processed" field.
 func (m *PageMutation) ResetProcessed() {
 	m.processed = nil
+	delete(m.clearedFields, page.FieldProcessed)
 }
 
 // SetURL sets the "url" field.
@@ -1386,7 +1399,11 @@ func (m *PageMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *PageMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(page.FieldProcessed) {
+		fields = append(fields, page.FieldProcessed)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -1399,6 +1416,11 @@ func (m *PageMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *PageMutation) ClearField(name string) error {
+	switch name {
+	case page.FieldProcessed:
+		m.ClearProcessed()
+		return nil
+	}
 	return fmt.Errorf("unknown Page nullable field %s", name)
 }
 

@@ -25,8 +25,8 @@ func (Page) Fields() []ent.Field {
 		field.Text("html").NotEmpty().StructTag(`validate:"required"`),
 		field.Time("created").Default(time.Now),
 		field.Time("updated").Default(time.Now),
-		field.Time("processed").Default(time.Time{}),
-		field.String("url").Unique().NotEmpty().MaxLen(ChromeUrlMaxLen),
+		field.Time("processed").Nillable().Optional(),
+		field.String("url").MaxLen(ChromeUrlMaxLen).NotEmpty(),
 	}
 }
 

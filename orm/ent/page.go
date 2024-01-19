@@ -30,7 +30,7 @@ type Page struct {
 	// Updated holds the value of the "updated" field.
 	Updated time.Time `json:"updated,omitempty"`
 	// Processed holds the value of the "processed" field.
-	Processed time.Time `json:"processed,omitempty"`
+	Processed *time.Time `json:"processed,omitempty"`
 	// URL holds the value of the "url" field.
 	URL          string `json:"url,omitempty"`
 	selectValues sql.SelectValues
@@ -108,7 +108,8 @@ func (pa *Page) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field processed", values[i])
 			} else if value.Valid {
-				pa.Processed = value.Time
+				pa.Processed = new(time.Time)
+				*pa.Processed = value.Time
 			}
 		case page.FieldURL:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -170,8 +171,10 @@ func (pa *Page) String() string {
 	builder.WriteString("updated=")
 	builder.WriteString(pa.Updated.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("processed=")
-	builder.WriteString(pa.Processed.Format(time.ANSIC))
+	if v := pa.Processed; v != nil {
+		builder.WriteString("processed=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("url=")
 	builder.WriteString(pa.URL)

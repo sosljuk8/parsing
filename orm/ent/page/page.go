@@ -69,8 +69,6 @@ var (
 	DefaultCreated func() time.Time
 	// DefaultUpdated holds the default value on creation for the "updated" field.
 	DefaultUpdated func() time.Time
-	// DefaultProcessed holds the default value on creation for the "processed" field.
-	DefaultProcessed time.Time
 	// URLValidator is a validator for the "url" field. It is called by the builders before save.
 	URLValidator func(string) error
 )

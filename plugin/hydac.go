@@ -13,6 +13,7 @@ import (
 
 const BrandHydac = "HYDAC"
 const BrandDomain = "www.hydac.com"
+const JobName = "HydacJob"
 
 func NewHydacJob() parse.Job {
 
@@ -23,6 +24,7 @@ func NewHydacJob() parse.Job {
 	}
 
 	job := parse.NewDefaultJob()
+	job.Name = JobName
 	job.AllowedDomains = []string{BrandDomain}
 	job.StartingURL = "https://www.hydac.com/shop/en/hps-2400-1000496612"
 	job.OnLink = func(e *colly.HTMLElement) error {
@@ -37,8 +39,6 @@ func NewHydacJob() parse.Job {
 
 	job.OnPage = func(e *colly.Response) (dto.Page, error) {
 
-		// TODO: Save body to db
-
 		url := e.Request.URL.String()
 		if !exp.MatchString(url) {
 			return dto.Page{}, errors.New("url not following mask /shop/en/{number}")
@@ -46,10 +46,11 @@ func NewHydacJob() parse.Job {
 
 		fmt.Println("OnPage")
 		return dto.Page{
-			URL:    url,
-			HTML:   string(e.Body),
+			Job:    job.Name,
 			Brand:  BrandHydac,
 			Domain: BrandDomain,
+			URL:    url,
+			HTML:   string(e.Body),
 		}, nil
 	}
 

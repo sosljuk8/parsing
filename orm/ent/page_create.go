@@ -135,10 +135,6 @@ func (pc *PageCreate) defaults() {
 		v := page.DefaultUpdated()
 		pc.mutation.SetUpdated(v)
 	}
-	if _, ok := pc.mutation.Processed(); !ok {
-		v := page.DefaultProcessed
-		pc.mutation.SetProcessed(v)
-	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -180,9 +176,6 @@ func (pc *PageCreate) check() error {
 	}
 	if _, ok := pc.mutation.Updated(); !ok {
 		return &ValidationError{Name: "updated", err: errors.New(`ent: missing required field "Page.updated"`)}
-	}
-	if _, ok := pc.mutation.Processed(); !ok {
-		return &ValidationError{Name: "processed", err: errors.New(`ent: missing required field "Page.processed"`)}
 	}
 	if _, ok := pc.mutation.URL(); !ok {
 		return &ValidationError{Name: "url", err: errors.New(`ent: missing required field "Page.url"`)}
@@ -244,7 +237,7 @@ func (pc *PageCreate) createSpec() (*Page, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := pc.mutation.Processed(); ok {
 		_spec.SetField(page.FieldProcessed, field.TypeTime, value)
-		_node.Processed = value
+		_node.Processed = &value
 	}
 	if value, ok := pc.mutation.URL(); ok {
 		_spec.SetField(page.FieldURL, field.TypeString, value)

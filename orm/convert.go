@@ -3,9 +3,17 @@ package orm
 import (
 	"parsing/dto"
 	"parsing/orm/ent"
+	"time"
 )
 
 func PageDTO(p *ent.Page) *dto.Page {
+
+	var processed time.Time
+
+	if p.Processed != nil {
+		processed = *p.Processed
+	}
+
 	return &dto.Page{
 		Job:       p.Job,
 		Brand:     p.Brand,
@@ -14,7 +22,7 @@ func PageDTO(p *ent.Page) *dto.Page {
 		HTML:      p.HTML,
 		Created:   p.Created,
 		Updated:   p.Updated,
-		Processed: p.Processed,
+		Processed: processed,
 	}
 }
 
@@ -30,16 +38,22 @@ func PagesDTO(p []*ent.Page) []*dto.Page {
 }
 
 func PageEntity(p *dto.Page) *ent.Page {
-	return &ent.Page{
-		Job:       p.Job,
-		Brand:     p.Brand,
-		Domain:    p.Domain,
-		URL:       p.URL,
-		HTML:      p.HTML,
-		Created:   p.Created,
-		Updated:   p.Updated,
-		Processed: p.Processed,
+
+	page := &ent.Page{
+		Job:     p.Job,
+		Brand:   p.Brand,
+		Domain:  p.Domain,
+		URL:     p.URL,
+		HTML:    p.HTML,
+		Created: p.Created,
+		Updated: p.Updated,
 	}
+
+	if !p.Processed.IsZero() {
+		page.Processed = &p.Processed
+	}
+
+	return page
 }
 
 func PagesEntity(p []*dto.Page) []*ent.Page {
