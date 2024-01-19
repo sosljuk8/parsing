@@ -64,6 +64,11 @@ func Domain(v string) predicate.Page {
 	return predicate.Page(sql.FieldEQ(FieldDomain, v))
 }
 
+// Job applies equality check predicate on the "job" field. It's identical to JobEQ.
+func Job(v string) predicate.Page {
+	return predicate.Page(sql.FieldEQ(FieldJob, v))
+}
+
 // HTML applies equality check predicate on the "html" field. It's identical to HTMLEQ.
 func HTML(v string) predicate.Page {
 	return predicate.Page(sql.FieldEQ(FieldHTML, v))
@@ -77,6 +82,11 @@ func Created(v time.Time) predicate.Page {
 // Updated applies equality check predicate on the "updated" field. It's identical to UpdatedEQ.
 func Updated(v time.Time) predicate.Page {
 	return predicate.Page(sql.FieldEQ(FieldUpdated, v))
+}
+
+// Processed applies equality check predicate on the "processed" field. It's identical to ProcessedEQ.
+func Processed(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldEQ(FieldProcessed, v))
 }
 
 // URL applies equality check predicate on the "url" field. It's identical to URLEQ.
@@ -212,6 +222,71 @@ func DomainEqualFold(v string) predicate.Page {
 // DomainContainsFold applies the ContainsFold predicate on the "domain" field.
 func DomainContainsFold(v string) predicate.Page {
 	return predicate.Page(sql.FieldContainsFold(FieldDomain, v))
+}
+
+// JobEQ applies the EQ predicate on the "job" field.
+func JobEQ(v string) predicate.Page {
+	return predicate.Page(sql.FieldEQ(FieldJob, v))
+}
+
+// JobNEQ applies the NEQ predicate on the "job" field.
+func JobNEQ(v string) predicate.Page {
+	return predicate.Page(sql.FieldNEQ(FieldJob, v))
+}
+
+// JobIn applies the In predicate on the "job" field.
+func JobIn(vs ...string) predicate.Page {
+	return predicate.Page(sql.FieldIn(FieldJob, vs...))
+}
+
+// JobNotIn applies the NotIn predicate on the "job" field.
+func JobNotIn(vs ...string) predicate.Page {
+	return predicate.Page(sql.FieldNotIn(FieldJob, vs...))
+}
+
+// JobGT applies the GT predicate on the "job" field.
+func JobGT(v string) predicate.Page {
+	return predicate.Page(sql.FieldGT(FieldJob, v))
+}
+
+// JobGTE applies the GTE predicate on the "job" field.
+func JobGTE(v string) predicate.Page {
+	return predicate.Page(sql.FieldGTE(FieldJob, v))
+}
+
+// JobLT applies the LT predicate on the "job" field.
+func JobLT(v string) predicate.Page {
+	return predicate.Page(sql.FieldLT(FieldJob, v))
+}
+
+// JobLTE applies the LTE predicate on the "job" field.
+func JobLTE(v string) predicate.Page {
+	return predicate.Page(sql.FieldLTE(FieldJob, v))
+}
+
+// JobContains applies the Contains predicate on the "job" field.
+func JobContains(v string) predicate.Page {
+	return predicate.Page(sql.FieldContains(FieldJob, v))
+}
+
+// JobHasPrefix applies the HasPrefix predicate on the "job" field.
+func JobHasPrefix(v string) predicate.Page {
+	return predicate.Page(sql.FieldHasPrefix(FieldJob, v))
+}
+
+// JobHasSuffix applies the HasSuffix predicate on the "job" field.
+func JobHasSuffix(v string) predicate.Page {
+	return predicate.Page(sql.FieldHasSuffix(FieldJob, v))
+}
+
+// JobEqualFold applies the EqualFold predicate on the "job" field.
+func JobEqualFold(v string) predicate.Page {
+	return predicate.Page(sql.FieldEqualFold(FieldJob, v))
+}
+
+// JobContainsFold applies the ContainsFold predicate on the "job" field.
+func JobContainsFold(v string) predicate.Page {
+	return predicate.Page(sql.FieldContainsFold(FieldJob, v))
 }
 
 // HTMLEQ applies the EQ predicate on the "html" field.
@@ -357,6 +432,46 @@ func UpdatedLT(v time.Time) predicate.Page {
 // UpdatedLTE applies the LTE predicate on the "updated" field.
 func UpdatedLTE(v time.Time) predicate.Page {
 	return predicate.Page(sql.FieldLTE(FieldUpdated, v))
+}
+
+// ProcessedEQ applies the EQ predicate on the "processed" field.
+func ProcessedEQ(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldEQ(FieldProcessed, v))
+}
+
+// ProcessedNEQ applies the NEQ predicate on the "processed" field.
+func ProcessedNEQ(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldNEQ(FieldProcessed, v))
+}
+
+// ProcessedIn applies the In predicate on the "processed" field.
+func ProcessedIn(vs ...time.Time) predicate.Page {
+	return predicate.Page(sql.FieldIn(FieldProcessed, vs...))
+}
+
+// ProcessedNotIn applies the NotIn predicate on the "processed" field.
+func ProcessedNotIn(vs ...time.Time) predicate.Page {
+	return predicate.Page(sql.FieldNotIn(FieldProcessed, vs...))
+}
+
+// ProcessedGT applies the GT predicate on the "processed" field.
+func ProcessedGT(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldGT(FieldProcessed, v))
+}
+
+// ProcessedGTE applies the GTE predicate on the "processed" field.
+func ProcessedGTE(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldGTE(FieldProcessed, v))
+}
+
+// ProcessedLT applies the LT predicate on the "processed" field.
+func ProcessedLT(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldLT(FieldProcessed, v))
+}
+
+// ProcessedLTE applies the LTE predicate on the "processed" field.
+func ProcessedLTE(v time.Time) predicate.Page {
+	return predicate.Page(sql.FieldLTE(FieldProcessed, v))
 }
 
 // URLEQ applies the EQ predicate on the "url" field.

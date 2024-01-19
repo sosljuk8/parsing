@@ -6,7 +6,10 @@ import (
 	"time"
 )
 
-const ChromeUrlMaxLen = 2048
+const (
+	ChromeUrlMaxLen = 2048
+	JobNameMaxLen   = 255
+)
 
 // Page holds the schema definition for the Page entity.
 type Page struct {
@@ -18,12 +21,11 @@ func (Page) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("brand").NotEmpty(),
 		field.String("domain").NotEmpty(),
+		field.String("job").MaxLen(JobNameMaxLen).NotEmpty(),
 		field.Text("html").NotEmpty().StructTag(`validate:"required"`),
-		field.Time("created").
-			Default(time.Now),
-		field.Time("updated").
-			Default(time.Now),
-		field.Time("processed"),
+		field.Time("created").Default(time.Now),
+		field.Time("updated").Default(time.Now),
+		field.Time("processed").Default(time.Time{}),
 		field.String("url").Unique().NotEmpty().MaxLen(ChromeUrlMaxLen),
 	}
 }

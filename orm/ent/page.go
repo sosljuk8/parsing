@@ -21,12 +21,16 @@ type Page struct {
 	Brand string `json:"brand,omitempty"`
 	// Domain holds the value of the "domain" field.
 	Domain string `json:"domain,omitempty"`
+	// Job holds the value of the "job" field.
+	Job string `json:"job,omitempty"`
 	// HTML holds the value of the "html" field.
 	HTML string `json:"html,omitempty" validate:"required"`
 	// Created holds the value of the "created" field.
 	Created time.Time `json:"created,omitempty"`
 	// Updated holds the value of the "updated" field.
 	Updated time.Time `json:"updated,omitempty"`
+	// Processed holds the value of the "processed" field.
+	Processed time.Time `json:"processed,omitempty"`
 	// URL holds the value of the "url" field.
 	URL          string `json:"url,omitempty"`
 	selectValues sql.SelectValues
@@ -39,9 +43,9 @@ func (*Page) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case page.FieldID:
 			values[i] = new(sql.NullInt64)
-		case page.FieldBrand, page.FieldDomain, page.FieldHTML, page.FieldURL:
+		case page.FieldBrand, page.FieldDomain, page.FieldJob, page.FieldHTML, page.FieldURL:
 			values[i] = new(sql.NullString)
-		case page.FieldCreated, page.FieldUpdated:
+		case page.FieldCreated, page.FieldUpdated, page.FieldProcessed:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -76,6 +80,12 @@ func (pa *Page) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pa.Domain = value.String
 			}
+		case page.FieldJob:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field job", values[i])
+			} else if value.Valid {
+				pa.Job = value.String
+			}
 		case page.FieldHTML:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field html", values[i])
@@ -93,6 +103,12 @@ func (pa *Page) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated", values[i])
 			} else if value.Valid {
 				pa.Updated = value.Time
+			}
+		case page.FieldProcessed:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field processed", values[i])
+			} else if value.Valid {
+				pa.Processed = value.Time
 			}
 		case page.FieldURL:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -142,6 +158,9 @@ func (pa *Page) String() string {
 	builder.WriteString("domain=")
 	builder.WriteString(pa.Domain)
 	builder.WriteString(", ")
+	builder.WriteString("job=")
+	builder.WriteString(pa.Job)
+	builder.WriteString(", ")
 	builder.WriteString("html=")
 	builder.WriteString(pa.HTML)
 	builder.WriteString(", ")
@@ -150,6 +169,9 @@ func (pa *Page) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated=")
 	builder.WriteString(pa.Updated.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("processed=")
+	builder.WriteString(pa.Processed.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("url=")
 	builder.WriteString(pa.URL)

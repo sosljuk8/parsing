@@ -8,26 +8,26 @@ import (
 )
 
 type MapperStore interface {
-	LoadUnprocessed(jobName string, limit int) []dto.Page
-	SaveProducts(...dto.Product) error
+	UnprocessedPages(jobName string, limit int) ([]*dto.Page, error)
+	SaveProducts(...*dto.Product) error
 }
 
-type ProductMapper struct {
+type Mapper struct {
 	store MapperStore
 	jobs  plugin.Jobs
 }
 
-func NewProductMapper(store MapperStore, j plugin.Jobs) ProductMapper {
-	return ProductMapper{store: store, jobs: j}
+func NewMapper(store MapperStore, j plugin.Jobs) Mapper {
+	return Mapper{store: store, jobs: j}
 }
 
-func (p ProductMapper) Run() {
+func (p Mapper) Run() {
 	for _, j := range p.jobs.All() {
 		go p.Processor(j)
 	}
 }
 
-func (p ProductMapper) Processor(j plugin.Job) {
+func (p Mapper) Processor(j plugin.Job) {
 
 	for {
 		err := p.Process(j)
@@ -38,21 +38,24 @@ func (p ProductMapper) Processor(j plugin.Job) {
 	}
 }
 
-func (p ProductMapper) Process(j plugin.Job) error {
+func (p Mapper) Process(j plugin.Job) error {
 
 	// load first 100 unprocessed pages
-	pages := p.store.LoadUnprocessed(j.Name, 100)
+	pages, loadErr := p.store.UnprocessedPages(j.Name, 100)
+	if loadErr != nil {
+		return loadErr
+	}
 
 	// for each page
 	for _, page := range pages {
 		// parse page
-		product, err := j.OnProduct(page)
+		product, err := j.OnProduct(*page)
 		if err != nil {
 			return err
 		}
 
 		// save product
-		err = p.save(product)
+		err = p.save(&product)
 		if err != nil {
 			return err
 		}
@@ -67,6 +70,6 @@ func (p ProductMapper) Process(j plugin.Job) error {
 	return nil
 }
 
-func (p ProductMapper) save(product dto.Product) error {
+func (p Mapper) save(product *dto.Product) error {
 	return p.store.SaveProducts(product)
 }

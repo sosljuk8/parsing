@@ -17,12 +17,16 @@ const (
 	FieldBrand = "brand"
 	// FieldDomain holds the string denoting the domain field in the database.
 	FieldDomain = "domain"
+	// FieldJob holds the string denoting the job field in the database.
+	FieldJob = "job"
 	// FieldHTML holds the string denoting the html field in the database.
 	FieldHTML = "html"
 	// FieldCreated holds the string denoting the created field in the database.
 	FieldCreated = "created"
 	// FieldUpdated holds the string denoting the updated field in the database.
 	FieldUpdated = "updated"
+	// FieldProcessed holds the string denoting the processed field in the database.
+	FieldProcessed = "processed"
 	// FieldURL holds the string denoting the url field in the database.
 	FieldURL = "url"
 	// Table holds the table name of the page in the database.
@@ -34,9 +38,11 @@ var Columns = []string{
 	FieldID,
 	FieldBrand,
 	FieldDomain,
+	FieldJob,
 	FieldHTML,
 	FieldCreated,
 	FieldUpdated,
+	FieldProcessed,
 	FieldURL,
 }
 
@@ -55,12 +61,16 @@ var (
 	BrandValidator func(string) error
 	// DomainValidator is a validator for the "domain" field. It is called by the builders before save.
 	DomainValidator func(string) error
+	// JobValidator is a validator for the "job" field. It is called by the builders before save.
+	JobValidator func(string) error
 	// HTMLValidator is a validator for the "html" field. It is called by the builders before save.
 	HTMLValidator func(string) error
 	// DefaultCreated holds the default value on creation for the "created" field.
 	DefaultCreated func() time.Time
 	// DefaultUpdated holds the default value on creation for the "updated" field.
 	DefaultUpdated func() time.Time
+	// DefaultProcessed holds the default value on creation for the "processed" field.
+	DefaultProcessed time.Time
 	// URLValidator is a validator for the "url" field. It is called by the builders before save.
 	URLValidator func(string) error
 )
@@ -83,6 +93,11 @@ func ByDomain(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDomain, opts...).ToFunc()
 }
 
+// ByJob orders the results by the job field.
+func ByJob(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldJob, opts...).ToFunc()
+}
+
 // ByHTML orders the results by the html field.
 func ByHTML(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHTML, opts...).ToFunc()
@@ -96,6 +111,11 @@ func ByCreated(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdated orders the results by the updated field.
 func ByUpdated(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdated, opts...).ToFunc()
+}
+
+// ByProcessed orders the results by the processed field.
+func ByProcessed(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldProcessed, opts...).ToFunc()
 }
 
 // ByURL orders the results by the url field.

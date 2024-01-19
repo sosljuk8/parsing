@@ -786,9 +786,11 @@ type PageMutation struct {
 	id            *int
 	brand         *string
 	domain        *string
+	job           *string
 	html          *string
 	created       *time.Time
 	updated       *time.Time
+	processed     *time.Time
 	url           *string
 	clearedFields map[string]struct{}
 	done          bool
@@ -966,6 +968,42 @@ func (m *PageMutation) ResetDomain() {
 	m.domain = nil
 }
 
+// SetJob sets the "job" field.
+func (m *PageMutation) SetJob(s string) {
+	m.job = &s
+}
+
+// Job returns the value of the "job" field in the mutation.
+func (m *PageMutation) Job() (r string, exists bool) {
+	v := m.job
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldJob returns the old "job" field's value of the Page entity.
+// If the Page object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PageMutation) OldJob(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldJob is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldJob requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldJob: %w", err)
+	}
+	return oldValue.Job, nil
+}
+
+// ResetJob resets all changes to the "job" field.
+func (m *PageMutation) ResetJob() {
+	m.job = nil
+}
+
 // SetHTML sets the "html" field.
 func (m *PageMutation) SetHTML(s string) {
 	m.html = &s
@@ -1074,6 +1112,42 @@ func (m *PageMutation) ResetUpdated() {
 	m.updated = nil
 }
 
+// SetProcessed sets the "processed" field.
+func (m *PageMutation) SetProcessed(t time.Time) {
+	m.processed = &t
+}
+
+// Processed returns the value of the "processed" field in the mutation.
+func (m *PageMutation) Processed() (r time.Time, exists bool) {
+	v := m.processed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProcessed returns the old "processed" field's value of the Page entity.
+// If the Page object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PageMutation) OldProcessed(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProcessed is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProcessed requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProcessed: %w", err)
+	}
+	return oldValue.Processed, nil
+}
+
+// ResetProcessed resets all changes to the "processed" field.
+func (m *PageMutation) ResetProcessed() {
+	m.processed = nil
+}
+
 // SetURL sets the "url" field.
 func (m *PageMutation) SetURL(s string) {
 	m.url = &s
@@ -1144,12 +1218,15 @@ func (m *PageMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PageMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 8)
 	if m.brand != nil {
 		fields = append(fields, page.FieldBrand)
 	}
 	if m.domain != nil {
 		fields = append(fields, page.FieldDomain)
+	}
+	if m.job != nil {
+		fields = append(fields, page.FieldJob)
 	}
 	if m.html != nil {
 		fields = append(fields, page.FieldHTML)
@@ -1159,6 +1236,9 @@ func (m *PageMutation) Fields() []string {
 	}
 	if m.updated != nil {
 		fields = append(fields, page.FieldUpdated)
+	}
+	if m.processed != nil {
+		fields = append(fields, page.FieldProcessed)
 	}
 	if m.url != nil {
 		fields = append(fields, page.FieldURL)
@@ -1175,12 +1255,16 @@ func (m *PageMutation) Field(name string) (ent.Value, bool) {
 		return m.Brand()
 	case page.FieldDomain:
 		return m.Domain()
+	case page.FieldJob:
+		return m.Job()
 	case page.FieldHTML:
 		return m.HTML()
 	case page.FieldCreated:
 		return m.Created()
 	case page.FieldUpdated:
 		return m.Updated()
+	case page.FieldProcessed:
+		return m.Processed()
 	case page.FieldURL:
 		return m.URL()
 	}
@@ -1196,12 +1280,16 @@ func (m *PageMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldBrand(ctx)
 	case page.FieldDomain:
 		return m.OldDomain(ctx)
+	case page.FieldJob:
+		return m.OldJob(ctx)
 	case page.FieldHTML:
 		return m.OldHTML(ctx)
 	case page.FieldCreated:
 		return m.OldCreated(ctx)
 	case page.FieldUpdated:
 		return m.OldUpdated(ctx)
+	case page.FieldProcessed:
+		return m.OldProcessed(ctx)
 	case page.FieldURL:
 		return m.OldURL(ctx)
 	}
@@ -1227,6 +1315,13 @@ func (m *PageMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDomain(v)
 		return nil
+	case page.FieldJob:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetJob(v)
+		return nil
 	case page.FieldHTML:
 		v, ok := value.(string)
 		if !ok {
@@ -1247,6 +1342,13 @@ func (m *PageMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdated(v)
+		return nil
+	case page.FieldProcessed:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProcessed(v)
 		return nil
 	case page.FieldURL:
 		v, ok := value.(string)
@@ -1310,6 +1412,9 @@ func (m *PageMutation) ResetField(name string) error {
 	case page.FieldDomain:
 		m.ResetDomain()
 		return nil
+	case page.FieldJob:
+		m.ResetJob()
+		return nil
 	case page.FieldHTML:
 		m.ResetHTML()
 		return nil
@@ -1318,6 +1423,9 @@ func (m *PageMutation) ResetField(name string) error {
 		return nil
 	case page.FieldUpdated:
 		m.ResetUpdated()
+		return nil
+	case page.FieldProcessed:
+		m.ResetProcessed()
 		return nil
 	case page.FieldURL:
 		m.ResetURL()

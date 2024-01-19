@@ -27,9 +27,11 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "brand", Type: field.TypeString},
 		{Name: "domain", Type: field.TypeString},
+		{Name: "job", Type: field.TypeString, Size: 255},
 		{Name: "html", Type: field.TypeString, Size: 2147483647},
 		{Name: "created", Type: field.TypeTime},
 		{Name: "updated", Type: field.TypeTime},
+		{Name: "processed", Type: field.TypeTime},
 		{Name: "url", Type: field.TypeString, Unique: true, Size: 2048},
 	}
 	// PagesTable holds the schema information for the "pages" table.

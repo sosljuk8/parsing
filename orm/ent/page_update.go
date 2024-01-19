@@ -56,6 +56,20 @@ func (pu *PageUpdate) SetNillableDomain(s *string) *PageUpdate {
 	return pu
 }
 
+// SetJob sets the "job" field.
+func (pu *PageUpdate) SetJob(s string) *PageUpdate {
+	pu.mutation.SetJob(s)
+	return pu
+}
+
+// SetNillableJob sets the "job" field if the given value is not nil.
+func (pu *PageUpdate) SetNillableJob(s *string) *PageUpdate {
+	if s != nil {
+		pu.SetJob(*s)
+	}
+	return pu
+}
+
 // SetHTML sets the "html" field.
 func (pu *PageUpdate) SetHTML(s string) *PageUpdate {
 	pu.mutation.SetHTML(s)
@@ -94,6 +108,20 @@ func (pu *PageUpdate) SetUpdated(t time.Time) *PageUpdate {
 func (pu *PageUpdate) SetNillableUpdated(t *time.Time) *PageUpdate {
 	if t != nil {
 		pu.SetUpdated(*t)
+	}
+	return pu
+}
+
+// SetProcessed sets the "processed" field.
+func (pu *PageUpdate) SetProcessed(t time.Time) *PageUpdate {
+	pu.mutation.SetProcessed(t)
+	return pu
+}
+
+// SetNillableProcessed sets the "processed" field if the given value is not nil.
+func (pu *PageUpdate) SetNillableProcessed(t *time.Time) *PageUpdate {
+	if t != nil {
+		pu.SetProcessed(*t)
 	}
 	return pu
 }
@@ -156,6 +184,11 @@ func (pu *PageUpdate) check() error {
 			return &ValidationError{Name: "domain", err: fmt.Errorf(`ent: validator failed for field "Page.domain": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.Job(); ok {
+		if err := page.JobValidator(v); err != nil {
+			return &ValidationError{Name: "job", err: fmt.Errorf(`ent: validator failed for field "Page.job": %w`, err)}
+		}
+	}
 	if v, ok := pu.mutation.HTML(); ok {
 		if err := page.HTMLValidator(v); err != nil {
 			return &ValidationError{Name: "html", err: fmt.Errorf(`ent: validator failed for field "Page.html": %w`, err)}
@@ -187,6 +220,9 @@ func (pu *PageUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.Domain(); ok {
 		_spec.SetField(page.FieldDomain, field.TypeString, value)
 	}
+	if value, ok := pu.mutation.Job(); ok {
+		_spec.SetField(page.FieldJob, field.TypeString, value)
+	}
 	if value, ok := pu.mutation.HTML(); ok {
 		_spec.SetField(page.FieldHTML, field.TypeString, value)
 	}
@@ -195,6 +231,9 @@ func (pu *PageUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.Updated(); ok {
 		_spec.SetField(page.FieldUpdated, field.TypeTime, value)
+	}
+	if value, ok := pu.mutation.Processed(); ok {
+		_spec.SetField(page.FieldProcessed, field.TypeTime, value)
 	}
 	if value, ok := pu.mutation.URL(); ok {
 		_spec.SetField(page.FieldURL, field.TypeString, value)
@@ -247,6 +286,20 @@ func (puo *PageUpdateOne) SetNillableDomain(s *string) *PageUpdateOne {
 	return puo
 }
 
+// SetJob sets the "job" field.
+func (puo *PageUpdateOne) SetJob(s string) *PageUpdateOne {
+	puo.mutation.SetJob(s)
+	return puo
+}
+
+// SetNillableJob sets the "job" field if the given value is not nil.
+func (puo *PageUpdateOne) SetNillableJob(s *string) *PageUpdateOne {
+	if s != nil {
+		puo.SetJob(*s)
+	}
+	return puo
+}
+
 // SetHTML sets the "html" field.
 func (puo *PageUpdateOne) SetHTML(s string) *PageUpdateOne {
 	puo.mutation.SetHTML(s)
@@ -285,6 +338,20 @@ func (puo *PageUpdateOne) SetUpdated(t time.Time) *PageUpdateOne {
 func (puo *PageUpdateOne) SetNillableUpdated(t *time.Time) *PageUpdateOne {
 	if t != nil {
 		puo.SetUpdated(*t)
+	}
+	return puo
+}
+
+// SetProcessed sets the "processed" field.
+func (puo *PageUpdateOne) SetProcessed(t time.Time) *PageUpdateOne {
+	puo.mutation.SetProcessed(t)
+	return puo
+}
+
+// SetNillableProcessed sets the "processed" field if the given value is not nil.
+func (puo *PageUpdateOne) SetNillableProcessed(t *time.Time) *PageUpdateOne {
+	if t != nil {
+		puo.SetProcessed(*t)
 	}
 	return puo
 }
@@ -360,6 +427,11 @@ func (puo *PageUpdateOne) check() error {
 			return &ValidationError{Name: "domain", err: fmt.Errorf(`ent: validator failed for field "Page.domain": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.Job(); ok {
+		if err := page.JobValidator(v); err != nil {
+			return &ValidationError{Name: "job", err: fmt.Errorf(`ent: validator failed for field "Page.job": %w`, err)}
+		}
+	}
 	if v, ok := puo.mutation.HTML(); ok {
 		if err := page.HTMLValidator(v); err != nil {
 			return &ValidationError{Name: "html", err: fmt.Errorf(`ent: validator failed for field "Page.html": %w`, err)}
@@ -408,6 +480,9 @@ func (puo *PageUpdateOne) sqlSave(ctx context.Context) (_node *Page, err error) 
 	if value, ok := puo.mutation.Domain(); ok {
 		_spec.SetField(page.FieldDomain, field.TypeString, value)
 	}
+	if value, ok := puo.mutation.Job(); ok {
+		_spec.SetField(page.FieldJob, field.TypeString, value)
+	}
 	if value, ok := puo.mutation.HTML(); ok {
 		_spec.SetField(page.FieldHTML, field.TypeString, value)
 	}
@@ -416,6 +491,9 @@ func (puo *PageUpdateOne) sqlSave(ctx context.Context) (_node *Page, err error) 
 	}
 	if value, ok := puo.mutation.Updated(); ok {
 		_spec.SetField(page.FieldUpdated, field.TypeTime, value)
+	}
+	if value, ok := puo.mutation.Processed(); ok {
+		_spec.SetField(page.FieldProcessed, field.TypeTime, value)
 	}
 	if value, ok := puo.mutation.URL(); ok {
 		_spec.SetField(page.FieldURL, field.TypeString, value)
