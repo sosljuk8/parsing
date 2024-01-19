@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"parsing/orm"
 	"parsing/parse"
-	"parsing/parse/plugin"
+	"parsing/plugin"
 )
 
 // RootCmd represents the base command when called without any subcommands
