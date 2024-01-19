@@ -6,6 +6,7 @@ import (
 	"github.com/gocolly/colly/v2"
 	"log"
 	"parsing/dto"
+	"parsing/parse"
 	"regexp"
 	"strings"
 )
@@ -13,7 +14,7 @@ import (
 const BrandHydac = "HYDAC"
 const BrandDomain = "www.hydac.com"
 
-func NewHydacJob() Job {
+func NewHydacJob() parse.Job {
 
 	// if url following mask /shop/en/{number}{end of string} with regex
 	exp, err := regexp.Compile(`\/shop\/en\/\d+$`)
@@ -21,7 +22,7 @@ func NewHydacJob() Job {
 		log.Fatal(err)
 	}
 
-	job := NewDefaultJob()
+	job := parse.NewDefaultJob()
 	job.AllowedDomains = []string{BrandDomain}
 	job.StartingURL = "https://www.hydac.com/shop/en/hps-2400-1000496612"
 	job.OnLink = func(e *colly.HTMLElement) error {

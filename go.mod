@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	entgo.io/ent v0.12.5
+	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/brianvoe/gofakeit/v6 v6.27.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gocolly/colly/v2 v2.1.0
@@ -12,7 +13,6 @@ require (
 
 require (
 	ariga.io/atlas v0.14.1-0.20230918065911-83ad451a4935 // indirect
-	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.3 // indirect

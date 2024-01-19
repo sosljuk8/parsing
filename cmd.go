@@ -41,7 +41,7 @@ var crawlerCmd = &cobra.Command{
 		s := orm.NewStore(c)
 
 		// initialize jobs for crawler
-		jobs := plugin.NewJobs()
+		jobs := parse.NewJobs()
 		jobs.Add(plugin.NewHydacJob())
 
 		// create crawler instance
@@ -65,7 +65,7 @@ var mapperCmd = &cobra.Command{
 		s := orm.NewStore(c)
 
 		// initialize jobs for crawler
-		jobs := plugin.NewJobs()
+		jobs := parse.NewJobs()
 		jobs.Add(plugin.NewHydacJob())
 
 		// create crawler instance

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gocolly/colly/v2"
 	"parsing/dto"
-	"parsing/parse/plugin"
 )
 
 type PageStore interface {
@@ -13,10 +12,10 @@ type PageStore interface {
 
 type Crawler struct {
 	store PageStore
-	jobs  plugin.Jobs
+	jobs  Jobs
 }
 
-func NewCrawler(s PageStore, j plugin.Jobs) Crawler {
+func NewCrawler(s PageStore, j Jobs) Crawler {
 	return Crawler{
 		store: s,
 		jobs:  j,
@@ -30,7 +29,7 @@ func (p Crawler) Run() {
 	}
 }
 
-func (p Crawler) Process(j plugin.Job) {
+func (p Crawler) Process(j Job) {
 
 	// Instantiate default collector
 	c := colly.NewCollector(

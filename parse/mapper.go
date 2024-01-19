@@ -3,7 +3,6 @@ package parse
 import (
 	"fmt"
 	"parsing/dto"
-	"parsing/parse/plugin"
 	"time"
 )
 
@@ -14,10 +13,10 @@ type MapperStore interface {
 
 type Mapper struct {
 	store MapperStore
-	jobs  plugin.Jobs
+	jobs  Jobs
 }
 
-func NewMapper(store MapperStore, j plugin.Jobs) Mapper {
+func NewMapper(store MapperStore, j Jobs) Mapper {
 	return Mapper{store: store, jobs: j}
 }
 
@@ -27,7 +26,7 @@ func (p Mapper) Run() {
 	}
 }
 
-func (p Mapper) Processor(j plugin.Job) {
+func (p Mapper) Processor(j Job) {
 
 	for {
 		err := p.Process(j)
@@ -38,7 +37,7 @@ func (p Mapper) Processor(j plugin.Job) {
 	}
 }
 
-func (p Mapper) Process(j plugin.Job) error {
+func (p Mapper) Process(j Job) error {
 
 	// load first 100 unprocessed pages
 	pages, loadErr := p.store.UnprocessedPages(j.Name, 100)
